@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>몸값연구소 발표 · 축구 선수의 몸값</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f1219; --bg-accent: #161b26;
+    --ink: #f2f4f8; --ink-dim: #8b93a7;
+    --accent: #ffd166; --accent2: #7cc7ff; --quote: #e8ecf4;
+  }
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--ink);
+    font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif; overflow: hidden; }
+  .slide { position: absolute; inset: 0; display: none; flex-direction: column;
+    justify-content: center; padding: 6vh 9vw; line-height: 1.55; }
+  .slide.on { display: flex; }
+  .kicker { font-size: clamp(15px, 1.6vw, 22px); letter-spacing: .14em;
+    color: var(--accent); font-weight: 700; margin-bottom: 2.2vh; }
+  .kicker.blue { color: var(--accent2); }
+  h1 { font-size: clamp(34px, 4.6vw, 64px); font-weight: 800; line-height: 1.25; }
+  h2 { font-size: clamp(26px, 3.4vw, 48px); font-weight: 800; line-height: 1.35; }
+  .sub { margin-top: 3vh; font-size: clamp(17px, 1.9vw, 26px); color: var(--ink-dim); }
+  blockquote { font-size: clamp(21px, 2.6vw, 38px); font-weight: 700; color: var(--quote);
+    line-height: 1.5; max-width: 28em; }
+  blockquote::before { content: "\201C"; color: var(--accent); }
+  blockquote::after { content: "\201D"; color: var(--accent); }
+  .facts { margin-top: 1vh; }
+  .facts li { list-style: none; font-size: clamp(19px, 2.3vw, 33px); margin: 2.4vh 0;
+    padding-left: 1.2em; text-indent: -1.2em; }
+  .facts li::before { content: "\00B7  "; color: var(--accent2); font-weight: 800; }
+  .facts b { color: var(--accent2); font-weight: 800; }
+  .point { margin-top: 3.4vh; font-size: clamp(20px, 2.5vw, 36px); font-weight: 700; }
+  .point b { color: var(--accent); }
+  .small { margin-top: 2.6vh; font-size: clamp(15px, 1.6vw, 22px); color: var(--ink-dim); }
+  .prompt { margin-top: 3vh; background: #101d1a; border: 1px solid #24463d; border-radius: 14px;
+    padding: 2.6vh 2vw; font-family: "SFMono-Regular", "D2Coding", Menlo, monospace;
+    font-size: clamp(14px, 1.55vw, 22px); line-height: 1.7; color: #d7f0ea; max-width: 40em; overflow-wrap: break-word; }
+  table.mini { margin-top: 3vh; border-collapse: collapse; font-size: clamp(16px, 1.9vw, 27px); }
+  table.mini th, table.mini td { padding: 1.2vh 1.4vw; border-bottom: 1px solid #2a3244; text-align: left; }
+  table.mini th { color: var(--accent); font-weight: 800; }
+  table.mini td:first-child { font-weight: 800; white-space: nowrap; }
+  table.mini td em { color: var(--accent2); font-style: normal; font-weight: 800; }
+  .split { margin-top: 3.4vh; display: flex; gap: 3vw; flex-wrap: wrap; }
+  .card { border: 1.5px solid #2a3244; border-radius: 16px; padding: 2.4vh 2vw; min-width: 15em; }
+  .card .t { color: var(--accent); font-weight: 800; font-size: clamp(16px, 1.8vw, 24px); }
+  .card .v { margin-top: 1.2vh; font-size: clamp(30px, 4vw, 58px); font-weight: 800; }
+  .card .d { margin-top: 1vh; color: var(--ink-dim); font-size: clamp(14px, 1.5vw, 20px); }
+  .withimg { display: flex; gap: 3vw; align-items: center; margin-top: 2vh; }
+  .withimg .txt { flex: 1 1 0; min-width: 0; }
+  .withimg img { max-height: 58vh; max-width: 32vw; border-radius: 14px; border: 1px solid #2a3244; object-fit: cover; }
+  .shot.tall img { max-height: 64vh; width: auto; margin: 0 auto; display: block; }
+  .shot.wide img { max-height: 46vh; width: auto; max-width: 100%; margin: 0 auto; display: block; }
+  .src { margin-top: 1.4vh; font-size: clamp(12px, 1.2vw, 16px); color: var(--ink-dim); }
+  .diagram { margin-top: 3vh; background: #f7f3e8; border-radius: 16px; padding: 2vh 1.4vw; overflow-x: auto; }
+  .diagram.short svg { max-height: var(--dh, 40vh); }
+  /* 인터랙티브 위젯, 밝은 상자 안 */
+  .widget { color: #1c2230; }
+  .diagram .widget svg { width: auto; max-width: 100%; max-height: var(--wh, 44vh); height: auto; display: block; margin: 0 auto; }
+  .wctl { display: flex; flex-wrap: wrap; align-items: center; gap: .8vh 1.4vw; margin-top: 1.2vh;
+          font-size: clamp(14px, 1.5vw, 20px); font-weight: 700; }
+  .wctl label { display: flex; align-items: center; gap: .6vw; white-space: nowrap; }
+  .wctl input[type=range] { width: clamp(120px, 16vw, 260px); accent-color: #2b7fd6; }
+  .wbtn { border: 1.5px solid #c9c2b2; background: #fff; color: #1c2230; border-radius: 999px;
+          padding: .5vh 1.2vw; font: inherit; font-weight: 700; cursor: pointer; }
+  .wbtn.on { background: #2b7fd6; border-color: #2b7fd6; color: #fff; }
+  .wout { margin-left: auto; color: #b07a00; font-variant-numeric: tabular-nums; }
+  .diagram svg { width: auto; max-width: 100%; max-height: 50vh; height: auto; display: block; margin: 0 auto; }
+  .chapter { background: radial-gradient(ellipse at 20% 110%, #1c2434 0%, var(--bg) 60%); }
+  .foot span { white-space: nowrap; }
+  .foot { position: absolute; bottom: 3.4vh; left: 9vw; right: 9vw;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--ink-dim); font-size: clamp(12px, 1.2vw, 16px); }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 7px; height: 7px; border-radius: 50%; background: #333c4e; }
+  .dots i.here { background: var(--accent); }
+  .hint { position: absolute; top: 3.2vh; right: 4vw; color: var(--ink-dim);
+    font-size: clamp(11px, 1.1vw, 14px); }
+@media (max-width: 760px) { .dots { display: none; } }
+</style>
+<style>
+  .bars { margin-top: 3.4vh; display: flex; flex-direction: column; gap: 2.2vh; max-width: 62em; }
+  .bar { display: grid; grid-template-columns: 15em 1fr 6em; align-items: center; gap: 1.2vw;
+    font-size: clamp(15px, 1.8vw, 25px); }
+  .bar .lab { font-weight: 700; white-space: nowrap; }
+  .bar .track { background: #1b2130; border-radius: 8px; height: 4.6vh; overflow: hidden; }
+  .bar .track i { display: block; height: 100%; background: var(--accent2); border-radius: 8px; }
+  .bar .track i.gray { background: #59627a; }
+  .bar .track i.hi { background: var(--accent); }
+  .bar .num { font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
+  .qbank { margin-top: 3.4vh; padding-left: 1.4em; color: var(--ink-dim); font-size: clamp(13px, 1.35vw, 18px); line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<!-- 1 제목 -->
+<section class="slide chapter">
+  <div class="kicker">1 / 9 · 제목</div>
+  <h1>축구 선수의 몸값은<br>정말 종합 능력치로 설명되는가</h1>
+  <p class="sub">몸값연구소 · 10101 홍길동 · 10102 김영희 · 10103 이철수</p>
+  <p class="small">선생님이 만든 가상 팀의 샘플 · 데이터와 수치는 실제 계산값</p>
+</section>
+
+<!-- 2 왜 이 주제인가 -->
+<section class="slide">
+  <div class="kicker">2 / 9 · 왜 이 주제인가</div>
+  <h2>능력치가 같은데 몸값이 몇 배씩 차이 나는 선수들</h2>
+  <ul class="facts">
+    <li>축구 게임에서 선수를 영입할 때마다 생긴 의문</li>
+    <li>종합 능력치 85인 선수 <b>24명</b>의 몸값: <b>1,700만</b> ~ <b>7,850만 유로</b> (<b>4.6배</b> 차이)</li>
+    <li>게임 회사가 능력치만 보고 몸값을 정하는지, 다른 요인이 있는지 확인</li>
+  </ul>
+</section>
+
+<!-- 3 데이터 -->
+<section class="slide">
+  <div class="kicker">3 / 9 · 데이터</div>
+  <h2>EA SPORTS FC 25 선수 능력치</h2>
+  <table class="mini">
+    <tr><th>항목</th><th>내용</th></tr>
+    <tr><td>출처</td><td>modudata 사본 (원래 출처 mzafram2001/ea-fc, MIT 라이선스)</td></tr>
+    <tr><td>크기</td><td><em>800행 · 14열</em> (2024-25 시즌, 골키퍼 제외 상위 800명)</td></tr>
+    <tr><td>사용한 열</td><td>overall(종합 능력치) · age(나이) · value_eur(몸값, 유로)</td></tr>
+    <tr><td>윤리</td><td>공개된 게임 능력치, 사생활 정보 없음 (3차시 승인)</td></tr>
+  </table>
+</section>
+
+<!-- 4 구멍과 전처리 -->
+<section class="slide">
+  <div class="kicker">4 / 9 · 데이터에서 찾은 구멍과 전처리 판단</div>
+  <h2>몸값 0인 선수와 치우친 분포</h2>
+  <div class="split">
+    <div class="card"><div class="t">몸값 0</div><div class="v">9명</div><div class="d">그중 8명은 소속 구단이 빈 칸<br>몸값을 모르는 선수로 보고 제외 · 791명 분석<br>평균으로 채우기는 거절</div></div>
+    <div class="card"><div class="t">치우친 분포</div><div class="v">2,929만</div><div class="d">평균(유로) · 중앙값 2,300만 · 최댓값 1억 7,450만<br>평균보다 비싼 선수 33.1%<br>스타 선수는 실제 값이라 빼지 않음</div></div>
+  </div>
+</section>
+
+<!-- 5 방법과 기준선 -->
+<section class="slide">
+  <div class="kicker">5 / 9 · 방법과 기준선</div>
+  <h2>선형 회귀 · 기준선은 평균 모델</h2>
+  <ul class="facts">
+    <li>훈련 데이터 <b>632명</b>으로 학습, 시험 데이터 <b>159명</b>으로 평가 (8:2 분할 고정)</li>
+    <li>기준선: 모든 선수를 훈련 데이터 평균 <b>2,902만 유로</b>로 예측, MAE <b>1,453만 유로</b></li>
+    <li>모델 A: overall 하나 · 모델 B: 몸값에 로그 · 모델 C: overall + age, 로그 몸값</li>
+    <li>비교 기준: 유로 단위 MAE (예측이 실제와 평균 몇 유로 차이 나는가)</li>
+  </ul>
+</section>
+
+<!-- 6 결과 -->
+<section class="slide">
+  <div class="kicker">6 / 9 · 결과</div>
+  <h2>시험 데이터 MAE: 1,453만에서 303만 유로로</h2>
+  <div class="bars">
+    <div class="bar"><span class="lab">평균 모델(기준선)</span><span class="track"><i style="width:100%" class="gray"></i></span><span class="num">1,453만</span></div>
+    <div class="bar"><span class="lab">A · overall</span><span class="track"><i style="width:59%"></i></span><span class="num">857만</span></div>
+    <div class="bar"><span class="lab">B · overall, 로그</span><span class="track"><i style="width:52.7%"></i></span><span class="num">766만</span></div>
+    <div class="bar"><span class="lab">C · overall + age, 로그</span><span class="track"><i style="width:20.9%" class="hi"></i></span><span class="num">303만</span></div>
+  </div>
+  <p class="small">R²: A 0.67 · B 0.62(로그 척도) · C 0.94(로그 척도) · 척도가 달라 R²끼리는 비교하지 않음 · 단위 유로</p>
+</section>
+
+<!-- 7 해석 -->
+<section class="slide">
+  <div class="kicker">7 / 9 · 해석</div>
+  <h2>능력치만으로는 부족하고, 나이를 함께 봐야 합니다</h2>
+  <ul class="facts" style="font-size:clamp(16px,1.9vw,27px)">
+    <li>능력치 1 오르면 예측 몸값 약 <b>1.20배</b>, 나이 한 살 많으면 약 <b>0.91배</b></li>
+    <li>능력치 85 기준 예측: 22살 <b>8,351만</b> · 32살 <b>3,393만 유로</b></li>
+    <li>AI 반론 뒤 고친 점 ①: 로그 R² 0.62 대 0.67 비교 철회, 같은 기준(MAE)으로는 B 766만 &lt; A 857만</li>
+    <li>고친 점 ②: 로그 없이 나이만 넣으면 MAE <b>562만</b>, 나이와 로그 둘 다 필요</li>
+    <li>고친 점 ③: 오차 상위 10명 중 <b>8명</b>이 23살 이하, 8명은 실제보다 높게 예측</li>
+  </ul>
+</section>
+
+<!-- 8 한계 -->
+<section class="slide">
+  <div class="kicker">8 / 9 · 한계</div>
+  <h2>이 결과를 믿기 어려운 곳</h2>
+  <ul class="facts" style="font-size:clamp(16px,1.9vw,27px)">
+    <li>원본 18,507명 중 상위 <b>800명</b>, 골키퍼 <b>0명</b> · 다른 선수에게 적용 불가</li>
+    <li>능력치 90 이상 <b>8명</b>뿐 · 86 이상 평균 오차 <b>1,277만</b>, 85 이하 <b>238만 유로</b></li>
+    <li>23살 이하 평균 오차 <b>656만</b>, 24살 이상 <b>200만 유로</b></li>
+    <li>계약 기간 · 시장 상황 · 리그 정보 없음 · 시험 데이터는 한 번만 분할</li>
+    <li>오용 주의: 게임 회사의 몸값을 따라 한 모델 · 실제 이적료 결정에 사용 금지</li>
+  </ul>
+</section>
+
+<!-- 9 질문 -->
+<section class="slide chapter">
+  <div class="kicker">9 / 9 · 질문 받겠습니다</div>
+  <h1>질문 받겠습니다</h1>
+  <p class="sub">앱: index.html · 코드와 기록: 팀 저장소 log/01~12</p>
+  <ol class="qbank">
+    <li>이 그래프(또는 숫자)는 무엇을 뜻합니까.</li>
+    <li>아무 모델도 쓰지 않았을 때(기준선)보다 얼마나 나아졌습니까.</li>
+    <li>이 결과를 믿을 수 없는 이유를 하나 말해 보십시오.</li>
+    <li>여러분 팀은 이 결과에서 무엇을 새로 알게 되었습니까.</li>
+    <li>주제를 왜 이것으로 정했습니까.</li>
+  </ol>
+</section>
+
+<div class="hint">← → 이동 · Home 처음으로</div>
+<div class="foot">
+  <span>몸값연구소 · 데이터 과학 팀 프로젝트</span>
+  <div class="dots" id="dots"></div>
+  <span id="pageno"></span>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dots = document.getElementById('dots');
+  slides.forEach(() => dots.appendChild(document.createElement('i')));
+  let cur = 0;
+  function show(i) {
+    cur = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, k) => s.classList.toggle('on', k === cur));
+    [...dots.children].forEach((d, k) => d.classList.toggle('here', k === cur));
+    document.getElementById('pageno').textContent = (cur + 1) + ' / ' + slides.length;
+  }
+  addEventListener('keydown', e => {
+    if (e.target.matches('input, select, textarea, button')) return;   // 위젯 조작 중에는 넘기지 않음
+    if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) show(cur + 1);
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) show(cur - 1);
+    if (e.key === 'Home') show(0);
+  });
+  addEventListener('click', e => { if (e.target.closest('a, .widget')) return; show(cur + (e.clientX > innerWidth / 2 ? 1 : -1)); });
+  show(0);
+</script>
+</body>
+</html>
