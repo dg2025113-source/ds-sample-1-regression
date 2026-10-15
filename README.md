@@ -136,14 +136,14 @@ R²는 모델마다 예측한 값의 척도에서 계산한 것이라 A와 B, C�
 - 10103 이철수: 앞서 내린 결론을 우리가 직접 뒤집었는데, 오히려 그 경험이 가장 기억에 남는다. 확인했지만 결론에 넣지 못한 결과도 기록할 가치가 있다는 것을 알았다.
 
 ## 생성형 AI 활용 명시
-- 사용한 AI: 대화형 생성형 AI 도구
+- 사용한 AI 모델: Claude Fable 5.1(Anthropic). 이 샘플은 선생님이 이 모델로 만들었습니다. 실제 팀은 사용한 모델 이름과 버전(예: ChatGPT GPT-5, Gemini 2.5, Claude 등)을 그대로 적습니다.
 - 사용한 곳: 앱 코드(`code/main.py`) 작성, 분석 결과에 대한 반론 요청, README 문구 다듬기
 - 사용하지 않은 곳: 주제를 고른 이유, 결과 해석, 결론. 팀원이 직접 썼습니다.
 - 검증 방법: README의 모든 수치는 `code/check.py`로 다시 계산해 확인했습니다. AI 제안을 받아들이지 않은 기록(빈 값 요약, 이상값 제거, XGBoost 최종 선택, 포지션 결론)은 `log/04.md`·`log/06.md`·`log/11.md`·`log/12.md`에 있습니다.
 
 ## 참고문헌
 1. EA SPORTS FC 25 선수 능력치(EA Sports, 2024-25 시즌). 공개 페이지(sofifa.com)를 정리한 GitHub mzafram2001/ea-fc `dataset_ea_fc_25.csv`(MIT 라이선스), 2026-10-15 접근. 수업용 사본: github.com/greatsong/modudata `eafc25_players.csv`(상위 800명).
-2. 소프트웨어: Python 3.11, pandas 2.3.3, NumPy 1.26.4, scikit-learn 1.8.0, plotly 6.6.0, Streamlit 1.53.1, xgboost 3.2.0, stlite 1.4.0. 포스터 그래프와 QR 코드: matplotlib 3.10.8, segno 1.6.6.
+2. 소프트웨어: Python 3.11, pandas 2.3.3, NumPy 1.26.4, scikit-learn 1.8.0, plotly 6.6.0, Streamlit 1.53.1, xgboost 3.2.0, stlite 1.4.0 · 생성형 AI: Claude Fable 5.1(Anthropic). 포스터 그래프와 QR 코드: matplotlib 3.10.8, segno 1.6.6.
 3. 『데이터 과학』, 2022 개정 교육과정 고등학교 교과서.
 
 ## 실행 방법
