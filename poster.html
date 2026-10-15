@@ -76,7 +76,8 @@
   .sec b { color: var(--accent); font-weight: 800; }
   .lb { font-weight: 800; margin-right: .3em; }
   .q { font-weight: 800; }
-  .flow { font-weight: 700; color: var(--accent); }
+  .flow { font-weight: 700; color: var(--accent); font-size: .9em; }
+  .flow span { white-space: nowrap; }
   .flow i { font-style: normal; color: var(--ink); font-weight: 400; margin: 0 .35em; }
   .cap { font-size: var(--fs-small); line-height: 1.35; }
   .fig svg { display: block; width: 100%; height: auto; }
@@ -131,14 +132,13 @@
 
       <section class="sec">
         <h2>1. 서론</h2>
-        <!-- 내용 시작: 연구 질문 1줄 · 왜 이 주제인가 3줄 · 이 포스터에서 보이는 것 1줄 -->
+        <!-- 내용 시작: 연구 질문 1줄 · 왜 이 주제인가 3줄 -->
         <p class="q">연구 질문: 축구 선수의 몸값은 종합 능력치로 설명되는가</p>
         <ul>
           <li>셋 다 즐겨 하는 축구 게임에서 생긴 질문</li>
           <li>능력치 85인 선수 <b>24명</b>의 몸값이 최대 <b>4.6배</b> 차이</li>
           <li>게임 회사는 능력치만 보고 몸값을 정할까</li>
         </ul>
-        <p><span class="lb">이 포스터:</span>능력치와 나이로 몸값을 예측한 모델, 그 해석과 한계</p>
         <!-- 내용 끝 -->
       </section>
 
@@ -622,7 +622,7 @@ Q 223.400643 28.667739 174.885456 28.667739
       <section class="sec">
         <h2>3. 방법</h2>
         <!-- 내용 시작: 분석 흐름 · 후보 모델 표 · 선택 이유 2줄 · 모델 소개 표(행 3, 열 6) · 평가지표 2줄 -->
-        <p class="flow">승인<i>→</i>전처리<i>→</i>기준선<i>→</i>후보 모델<i>→</i>선택<i>→</i>해석</p>
+        <p class="flow"><span>수집(800행)</span><i>→</i><span>변수 선택(능력치·나이)</span><i>→</i><span>전처리(9명 제외·로그)</span><i>→</i><span>분할(8:2)</span><i>→</i><span>기준선(평균)</span><i>→</i><span>후보 5종</span><i>→</i><span>선택(선형 회귀)</span><i>→</i><span>평가(MAE·R²)</span><i>→</i><span>해석(나이·포지션)</span></p>
         <table class="t">
           <tr><th>후보 모델(입력 overall·age, 예측 로그 몸값)</th><th class="r">MAE</th><th class="r">R²(로그)</th></tr>
           <tr><td>평균 모델(기준선)</td><td class="r">1,453만 유로</td><td class="r">0.00</td></tr>
@@ -1585,12 +1585,12 @@ z
 
       <section class="sec">
         <h2>5. 해석과 결론</h2>
-        <!-- 내용 시작: 우리 팀이 찾아낸 것 3개(헤드라인 + 근거 한 줄) · AI 반론 1줄 · 결론 한 문장 -->
+        <!-- 내용 시작: 우리 팀이 찾아낸 것 3개(헤드라인 + 근거 한 줄) · 비교 기준 1줄 · 결론 한 문장 -->
         <ul>
           <li><span class="lb">몸값은 실력에 남은 선수 생활까지 합친 값</span><br>같은 85점: 23살 이하 중앙값 <b>7,625만</b>, 30살 이상 <b>2,650만 유로</b>(2.9배)</li>
           <li><span class="lb">능력치 1점의 값은 위로 갈수록 커지고, 꼭대기에서도 꺾이지 않음</span><br>80~88점에서 한 점 오를 때마다 중앙값 <b>1.12~1.34배</b></li>
           <li><span class="lb">같은 능력치·나이면 공격수가 수비수보다 비쌈</span><br>예측보다 비싼 선수: 공격 <b>75.6%</b>, 수비 <b>29.4%</b></li>
-          <li><span class="lb">AI 반론:</span>척도가 다른 R²를 비교함 → 유로 단위 MAE로 다시 비교</li>
+          <li><span class="lb">비교 기준:</span>척도가 다른 R² 대신 유로 단위 MAE로 비교</li>
         </ul>
         <p class="final">이 데이터에서 몸값은 능력치만이 아니라 나이·포지션과 함께 움직임</p>
         <!-- 내용 끝 -->

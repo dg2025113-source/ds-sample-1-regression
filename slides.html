@@ -100,6 +100,11 @@
   .small-facts li { font-size: clamp(17px, 2vw, 28px); }
   .sub2 { font-size: clamp(14px, 1.55vw, 21px); color: var(--ink-dim); font-weight: 400; }
   .sub2 b { color: var(--accent2); }
+  .steps { margin-top: 3vh; display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; }
+  .steps ol { margin: 0; padding-left: 1.6em; }
+  .steps li { font-size: clamp(15px, 1.7vw, 24px); margin: 1.6vh 0; line-height: 1.4; color: var(--ink-dim); }
+  .steps li::marker { color: var(--accent2); font-weight: 800; }
+  .steps li b { display: block; color: var(--ink); font-weight: 800; }
   table.mini.cmp { font-size: clamp(14px, 1.6vw, 23px); width: 100%; }
   table.mini.cmp th, table.mini.cmp td { padding: 1.2vh .9vw; }
   table.mini.cmp td { white-space: nowrap; }
@@ -146,13 +151,22 @@
 <section class="slide">
   <div class="kicker">4 / 17 · 어떤 과정으로 분석했는지</div>
   <h2>어떤 과정으로 분석했는지</h2>
-  <ul class="facts">
-    <li>데이터 판정, 선생님 승인 (3차시)</li>
-    <li>결측과 분포 확인, 몸값 0인 선수 9명 발견 (4~6차시)</li>
-    <li>선형 회귀 모델 A, 평균 모델과 비교 (7~8차시)</li>
-    <li>로그 몸값 모델 B, 나이 추가 모델 C, 후보 모델 5개 비교 (10~11차시)</li>
-    <li>AI 반론 3가지 받고 해석 수정 (12차시)</li>
-  </ul>
+  <div class="steps">
+    <ol>
+      <li><b>수집</b>modudata 사본 CSV · 800행 · 14열</li>
+      <li><b>변수 선택</b>입력 overall · age, 정답 몸값 · 세부 능력치 6개 제외</li>
+      <li><b>전처리</b>몸값 0인 9명 제외 · 로그 변환(왜도 2.80→0.36)</li>
+      <li><b>분할</b>훈련 632명 · 시험 159명 · 난수 고정</li>
+      <li><b>기준선</b>평균 모델 MAE 1,453만 유로</li>
+    </ol>
+    <ol start="6">
+      <li><b>후보 비교</b>회귀 모델 5종, 같은 입력 · 같은 분할</li>
+      <li><b>선택</b>선형 회귀, 계수로 설명 가능</li>
+      <li><b>평가</b>유로 단위 MAE 중심 · R² 함께</li>
+      <li><b>해석</b>나이별 · 점수별 몸값, 포지션별 오차 방향</li>
+      <li><b>한계 점검</b>능력치 77~91 · 골키퍼 0명 · 교차검증 미실시</li>
+    </ol>
+  </div>
 </section>
 
 <!-- 5 고려한 모델 -->
