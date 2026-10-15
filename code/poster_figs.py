@@ -1,6 +1,8 @@
-"""포스터(poster.html)에 넣을 그래프 3개와 QR 코드 2개를 SVG로 만들어 끼워 넣는 스크립트.
+"""v4 포스터(poster.html)에 넣을 그래프 3개를 SVG로 만들어 끼워 넣는 스크립트.
 
-저장소 맨 위 폴더에서 실행한다: python3 code/poster_figs.py
+poster_figs_v3.py와 계산·그래프는 같고, 2단 균등(단 폭 260mm, poster.html과 같음)에 맞춰 그래프 폭과 높이만 다르다.
+QR 2개는 poster.html의 것을 poster.html에 그대로 옮겨 두었으므로 여기서 다시 만들지 않는다.
+저장소 맨 위 폴더에서 실행한다: python3 code/poster_figs_v4.py
 check.py와 같은 전처리·분할·모델을 사용하므로 그래프의 값은 check.py 수치와 같다.
 포스터를 만들 때만 사용하는 도구라 matplotlib·segno·xgboost가 필요하다(앱 실행에는 필요 없음).
   pip install matplotlib segno xgboost
@@ -39,6 +41,8 @@ GRAY = "#9aa0aa"        # 선택하지 않은 모델·나머지 점
 DARK = "#4a4f57"        # 기준선
 # 단 폭(인치) = (594mm - 좌우 여백 2×26mm - 단 사이 22mm) / 2 = 260mm. poster.html의 --pad-x·--gap을 바꾸면 다시 계산한다
 COL_W = 260 / 25.4
+# v4 그래프 높이(인치): 단 폭은 같고 높이만 정한다
+HIST_H, BARS_H, RESULT_H = 3.3, 3.1, 6.2
 
 plt.rcParams.update({
     "svg.fonttype": "none",          # 글자를 글자로 남겨 브라우저 글꼴로 그린다
@@ -83,9 +87,9 @@ def inject(figs):
     POSTER.write_text(html, encoding="utf-8")
 
 
-def bar_chart(names, values, pick, base, fmt, xlabel, height=4.6):
+def bar_chart(names, values, pick, base, fmt, xlabel, height=4.6, width=COL_W):
     """평가지표 비교 가로 막대. pick=선택 모델 이름, base=기준선 이름."""
-    fig, ax = plt.subplots(figsize=(COL_W, height))
+    fig, ax = plt.subplots(figsize=(width, height))
     y = np.arange(len(names))[::-1]
     colors = [ACCENT if n == pick else DARK if n == base else GRAY for n in names]
     ax.barh(y, values, color=colors, height=0.66)
@@ -136,13 +140,13 @@ y = test["value_eur"]
 X = ["overall", "age"]
 
 # 그래프 1(FIG:hist): 몸값 분포(791명)
-fig, ax = plt.subplots(figsize=(COL_W, 2.9))
+fig, ax = plt.subplots(figsize=(COL_W, HIST_H))
 ax.hist(v / 10_000, bins=np.arange(0, 18_001, 500), color=ACCENT, edgecolor="#fff", linewidth=0.6)
 top = ax.get_ylim()[1]
 for val, lab, dy in [(v.median(), f"중앙값 {man(v.median())} 유로", 0.55), (v.mean(), f"평균 {man(v.mean())} 유로", 0.85)]:
     ax.axvline(val / 10_000, color="#000", linestyle=(0, (4, 3)), linewidth=1.4)
     # 두 선이 가까워 글자는 빈 오른쪽에 두고 가는 선으로 잇는다
-    ax.annotate(lab, xy=(val / 10_000, top * dy), xytext=(6_500, top * dy), va="center", fontsize=20,
+    ax.annotate(lab, xy=(val / 10_000, top * dy), xytext=(7_000, top * dy), va="center", fontsize=20,
                 arrowprops=dict(arrowstyle="-", color="#000", linewidth=1.0, shrinkA=4, shrinkB=0))
 ax.set_xlabel("몸값(만 유로)")
 ax.set_ylabel("선수 수(명)")
@@ -165,14 +169,15 @@ for name, m in models:
     names.append(name)
     maes.append(mean_absolute_error(y, 10 ** m.predict(test[X])))
 svg_bars = bar_chart(names, [m / 10_000 for m in maes], pick="선형 회귀(선택)", base="평균 모델(기준선)",
-                     fmt=lambda t: f"{int(round(t)):,}만", xlabel="MAE(만 유로, 작을수록 좋음)")
+                     fmt=lambda t: f"{int(round(t)):,}만", xlabel="MAE(만 유로, 작을수록 좋음)",
+                     height=BARS_H, width=COL_W)
 
 # 그래프 3(FIG:result): 시험 데이터 159명의 실제 몸값과 최종 모델(C, 선형 회귀) 예측
 mc = LinearRegression().fit(train[X], train["log_value"])
 pred = 10 ** mc.predict(test[X]) / 10_000
 real = y / 10_000
 young = (test["age"] <= 23).to_numpy()
-fig, ax = plt.subplots(figsize=(COL_W, 6.3))
+fig, ax = plt.subplots(figsize=(COL_W, RESULT_H))
 lo, hi = 300, 20_000
 ax.plot([lo, hi], [lo, hi], color="#000", linewidth=1.4, linestyle=(0, (4, 3)))
 ax.scatter(real[~young], pred[~young], s=70, color=GRAY, edgecolor="none", label=f"24살 이상 {(~young).sum()}명")
@@ -192,7 +197,6 @@ ax.text(lo * 1.15, hi * 0.8, "점선 위: 실제보다 높게 예측", va="top",
 ax.legend(loc="lower right", frameon=False, fontsize=20, handletextpad=0.2, borderaxespad=0.1)
 svg_result = svg_of(fig)
 
-inject({"hist": svg_hist, "bars": svg_bars, "result": svg_result,
-        "qr_repo": qr_svg(REPO_URL), "qr_app": qr_svg(APP_URL)})
+inject({"hist": svg_hist, "bars": svg_bars, "result": svg_result})
 print("MAE(만 유로):", ", ".join(f"{n} {m / 10_000:,.0f}" for n, m in zip(names, maes)))
-print(f"poster.html 갱신: 그래프 3개, QR 2개 (시험 데이터 {len(test)}명, 23살 이하 {young.sum()}명)")
+print(f"poster.html 갱신: 그래프 3개 (시험 데이터 {len(test)}명, 23살 이하 {young.sum()}명)")
