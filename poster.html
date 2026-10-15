@@ -61,7 +61,7 @@
   /* 2단 */
   .body { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap);
     padding: 13mm var(--pad-x) 0; min-height: 0; }
-  .col { display: flex; flex-direction: column; justify-content: space-between; gap: 12mm; min-height: 0; overflow: hidden; }
+  .col { display: flex; flex-direction: column; justify-content: space-between; gap: 10mm; min-height: 0; overflow: hidden; }
 
   /* 구역 */
   .sec { font-size: var(--fs-body); line-height: 1.42; }
@@ -100,7 +100,7 @@
   .nums .k { display: block; font-size: var(--fs-small); margin-top: 1.5mm; }
 
   /* 발치 */
-  .foot { margin-top: 10mm; padding: 7mm var(--pad-x) 13mm; border-top: .6mm solid var(--ink);
+  .foot { margin-top: 8mm; padding: 6mm var(--pad-x) 11mm; border-top: .6mm solid var(--ink);
     display: grid; grid-template-columns: 1fr auto; gap: 14mm; align-items: center; font-size: var(--fs-small); line-height: 1.5; }
   .foot .qr { display: grid; grid-template-columns: 30mm auto; gap: 4mm; align-items: center; }
   .foot .qr svg { width: 30mm; height: 30mm; display: block; }
@@ -1616,8 +1616,9 @@ z
   <footer class="foot">
     <div>
       <!-- 내용 시작: 데이터 출처 · 재계산 안내 · 저장소·앱 주소 -->
-      데이터: github.com/greatsong/modudata · eafc25_players.csv (EA SPORTS FC 25, 2024-25 시즌)<br>
-      모든 수치는 code/check.py로 다시 계산할 수 있음<br>
+      데이터: EA SPORTS FC 25 선수 능력치(EA Sports, 2024-25 시즌) · 게임사 비공식 데이터<br>
+      수집 경로: sofifa.com 공개 페이지 정리본 GitHub mzafram2001/ea-fc(MIT), 2026-10-15 접근<br>
+      모든 수치는 code/check.py로 다시 계산할 수 있음 · 데이터 출처·소프트웨어는 저장소 README 참고문헌 참고<br>
       저장소 github.com/greatsong/ds-sample-1-regression · 앱 greatsong.github.io/ds-sample-1-regression
       <!-- 내용 끝 -->
     </div>
