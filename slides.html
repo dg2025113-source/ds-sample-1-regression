@@ -98,13 +98,16 @@
   .chart { width: 38vw; height: 46vh; }
   .nw { white-space: nowrap; }
   .small-facts li { font-size: clamp(17px, 2vw, 28px); }
+  table.mini.cmp { font-size: clamp(14px, 1.6vw, 23px); width: 100%; }
+  table.mini.cmp th, table.mini.cmp td { padding: 1.2vh .9vw; }
+  table.mini.cmp td { white-space: nowrap; }
 </style>
 </head>
 <body>
 
 <!-- 1 제목 -->
 <section class="slide chapter">
-  <div class="kicker">1 / 12 · 제목</div>
+  <div class="kicker">1 / 16 · 제목</div>
   <h1>축구 선수의 몸값은<br>정말 종합 능력치로 설명되는가</h1>
   <p class="sub">몸값연구소 · 10101 홍길동 · 10102 김영희 · 10103 이철수</p>
   <p class="small">선생님이 만든 가상 팀의 샘플 · 데이터와 수치는 실제 계산값</p>
@@ -112,7 +115,7 @@
 
 <!-- 2 데이터셋 -->
 <section class="slide">
-  <div class="kicker">2 / 12 · 우리 팀의 데이터셋</div>
+  <div class="kicker">2 / 16 · 우리 팀의 데이터셋</div>
   <h2>우리 팀의 데이터셋</h2>
   <div class="withimg">
     <ul class="facts txt">
@@ -127,7 +130,7 @@
 
 <!-- 3 선택 이유 -->
 <section class="slide">
-  <div class="kicker">3 / 12 · 이 문제를 선택한 이유</div>
+  <div class="kicker">3 / 16 · 이 문제를 선택한 이유</div>
   <h2>이 문제를 선택한 이유</h2>
   <ul class="facts">
     <li>셋 다 즐겨 하는 축구 게임</li>
@@ -139,7 +142,7 @@
 
 <!-- 4 과정 -->
 <section class="slide">
-  <div class="kicker">4 / 12 · 어떤 과정으로 분석했는지</div>
+  <div class="kicker">4 / 16 · 어떤 과정으로 분석했는지</div>
   <h2>어떤 과정으로 분석했는지</h2>
   <ul class="facts">
     <li>데이터 판정, 선생님 승인 (3차시)</li>
@@ -152,7 +155,7 @@
 
 <!-- 5 고려한 모델 -->
 <section class="slide">
-  <div class="kicker">5 / 12 · 어떤 모델을 고려했는지</div>
+  <div class="kicker">5 / 16 · 어떤 모델을 고려했는지</div>
   <h2>어떤 모델을 고려했는지</h2>
   <table class="mini">
     <tr><th>후보 모델</th><th>시험 데이터 MAE</th><th>R²(로그 척도)</th></tr>
@@ -167,7 +170,7 @@
 
 <!-- 6 선택 이유 -->
 <section class="slide">
-  <div class="kicker">6 / 12 · 왜 이 모델을 선택했는지</div>
+  <div class="kicker">6 / 16 · 왜 이 모델을 선택했는지</div>
   <h2>왜 이 모델을 선택했는지</h2>
   <ul class="facts">
     <li>가장 작은 MAE: XGBoost · k-NN <b>263만 유로</b>, 선형 회귀보다 <b>40만</b> 작음</li>
@@ -180,7 +183,7 @@
 
 <!-- 7 평가지표 -->
 <section class="slide">
-  <div class="kicker">7 / 12 · 우리가 사용한 평가지표</div>
+  <div class="kicker">7 / 16 · 우리가 사용한 평가지표</div>
   <h2>우리가 사용한 평가지표</h2>
   <ul class="facts">
     <li>R²: 평균 모델보다 오차를 얼마나 줄였나 (0~1)</li>
@@ -193,7 +196,7 @@
 
 <!-- 8 결정 -->
 <section class="slide">
-  <div class="kicker">8 / 12 · 모델링 과정에서 우리 팀이 결정한 것</div>
+  <div class="kicker">8 / 16 · 모델링 과정에서 우리 팀이 결정한 것</div>
   <h2>모델링 과정에서 우리 팀이 결정한 것</h2>
   <ul class="facts">
     <li>몸값 0인 선수 9명 제외, 평균으로 채우지 않음</li>
@@ -206,7 +209,7 @@
 
 <!-- 9 해석 -->
 <section class="slide">
-  <div class="kicker">9 / 12 · 최종 분석 결과에 대한 우리 팀의 해석</div>
+  <div class="kicker">9 / 16 · 최종 분석 결과에 대한 우리 팀의 해석</div>
   <h2>최종 분석 결과에 대한 우리 팀의 해석</h2>
   <div class="withimg">
     <div class="diagram plot"><div class="chart" id="g8"></div></div>
@@ -222,7 +225,7 @@
 
 <!-- 10 추가 연구 -->
 <section class="slide">
-  <div class="kicker">10 / 12 · 이후 추가로 연구한다면</div>
+  <div class="kicker">10 / 16 · 이후 추가로 연구한다면</div>
   <h2>이후 추가로 연구한다면 더 해 보고 싶은 것</h2>
   <table class="mini">
     <tr><th>구분</th><th>키워드</th></tr>
@@ -234,7 +237,7 @@
 
 <!-- 11 느낀 점 -->
 <section class="slide">
-  <div class="kicker">11 / 12 · 느끼고 배운 점</div>
+  <div class="kicker">11 / 16 · 느끼고 배운 점</div>
   <h2>AI를 활용하고 데이터를 분석하며 느끼고 배운 점</h2>
   <ul class="facts small-facts">
     <li>홍길동: "AI가 제일 먼저 말한 방법이 우리 데이터에 맞는 방법은 아니었다."</li>
@@ -244,9 +247,58 @@
   <p class="point">AI 활용에서 배운 것: <b>기준선은 훈련 데이터 평균으로</b> · <b>다른 척도의 R²는 비교 불가</b></p>
 </section>
 
-<!-- 12 마무리 -->
+<!-- 12~15 2부 · 모델 소개 (3분 발표) -->
+<section class="slide">
+  <div class="kicker">12 / 16 · 모델 소개 · 우리가 선택한 모델</div>
+  <h2>우리가 선택한 모델: 선형 회귀</h2>
+  <ul class="facts small-facts">
+    <li>원리: 오차가 가장 작아지는 직선을 찾음 (우리는 로그 몸값에 적용)</li>
+    <li>장점: 계수로 영향 해석 (능력치 1점 <b>1.20배</b>) · 계산이 빠르고 단순</li>
+    <li>단점: 곡선 관계에 약함 · 이상값에 흔들림</li>
+    <li>이런 상황에 좋음: 관계가 직선에 가깝고 이유를 설명해야 할 때</li>
+    <li>우리 데이터: MAE <b>303만 유로</b> · R² <b>0.94</b>(로그 척도)</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">13 / 16 · 모델 소개 · 비교 모델 1</div>
+  <h2>비교 모델 1: XGBoost 회귀</h2>
+  <ul class="facts small-facts">
+    <li>원리: 작은 트리를 차례로 더함, 다음 트리가 앞 트리의 오차를 줄임</li>
+    <li>장점: 표 형태 데이터에 강함 · 곡선 관계와 변수 조합 반영</li>
+    <li>단점: 트리가 많아 이유 설명 어려움 · 설정값이 많고 과적합 주의</li>
+    <li>이런 상황에 좋음: 설명보다 예측 정확도가 중요할 때</li>
+    <li>우리 데이터: MAE <b>263만 유로</b> · R² <b>0.96</b>(로그 척도)</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">14 / 16 · 모델 소개 · 비교 모델 2</div>
+  <h2>비교 모델 2: k-NN 회귀(k=5)</h2>
+  <ul class="facts small-facts">
+    <li>원리: 입력이 가장 가까운 선수 5명의 값을 평균</li>
+    <li>장점: 원리가 단순 · 따로 학습하는 과정 없음</li>
+    <li>단점: 척도(열의 단위)에 민감 · 왜 그 값인지 규칙으로 설명 못함</li>
+    <li>이런 상황에 좋음: 변수가 적고 비슷한 사례가 많을 때</li>
+    <li>우리 데이터: MAE <b>263만 유로</b> · R² <b>0.96</b>(로그 척도)</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">15 / 16 · 모델 소개 · 세 모델 비교 요약</div>
+  <h2>세 모델 비교 요약</h2>
+  <table class="mini cmp">
+    <tr><th>모델</th><th>원리</th><th>장점</th><th>단점</th><th>적합한 상황</th><th>우리 데이터</th></tr>
+    <tr><td>선형 회귀</td><td>직선</td><td>계수 해석</td><td>곡선에 약함</td><td>이유 설명</td><td><em>303만 유로</em></td></tr>
+    <tr><td>XGBoost</td><td>트리를 차례로 더함</td><td>높은 정확도</td><td>설명 어려움</td><td>예측이 중요</td><td>263만 유로</td></tr>
+    <tr><td>k-NN</td><td>가까운 5명 평균</td><td>단순, 학습 없음</td><td>척도에 민감</td><td>사례가 많음</td><td>263만 유로</td></tr>
+  </table>
+  <p class="point">우리 데이터에는 <b>선형 회귀</b>: 질문이 "설명되는가", 40만 유로 차이보다 계수 해석</p>
+</section>
+
+<!-- 16 마무리 -->
 <section class="slide chapter">
-  <div class="kicker">12 / 12 · 마무리</div>
+  <div class="kicker">16 / 16 · 마무리</div>
   <h1>감사합니다</h1>
   <p class="sub">질문 받겠습니다</p>
   <p class="small">몸값연구소 · 홍길동 · 김영희 · 이철수</p>
