@@ -23,7 +23,7 @@
 - 출처: EA SPORTS FC 25 선수 능력치(EA Sports, 2024-25 시즌). 공개 페이지(sofifa.com)를 정리한 GitHub mzafram2001/ea-fc `dataset_ea_fc_25.csv`(MIT 라이선스), 2026-10-15 접근. 게임사가 공식 배포한 데이터가 아닙니다. 열 설명은 `data/출처.md`에 있습니다.
 - 수업용 사본 경로: https://raw.githubusercontent.com/greatsong/modudata/main/data/eafc25_players.csv (위 데이터에서 골키퍼를 빼고 종합 능력치 상위 800명을 고른 사본)
 - 기간·행 수·열 수: EA SPORTS FC 25(2024-25 시즌) · 800행 · 14열. 몸값이 0인 9명을 빼고 791명을 분석했습니다.
-- 사용한 열: overall(종합 능력치), age(나이), value_eur(몸값, 유로). 잔차를 살펴볼 때 positions(포지션)와 club(소속 구단)도 확인했습니다.
+- 사용한 열: overall(종합 능력치), age(나이), value_eur(몸값, 유로). 예측 오차(잔차)를 살펴볼 때 positions(포지션)와 club(소속 구단)도 확인했습니다.
 - 개인 단위 정보 없음 확인: 예. 행마다 선수 한 명이지만 공개된 게임 능력치이고, 연락처나 사생활 정보는 없습니다.
 
 ### 데이터에서 찾은 구멍과 전처리 판단
