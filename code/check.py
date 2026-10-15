@@ -7,9 +7,17 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.tree import DecisionTreeRegressor
+
+try:  # XGBoost는 로컬 확인용. 앱(stlite)에는 넣지 않는다
+    from xgboost import XGBRegressor
+except ImportError:
+    XGBRegressor = None
 
 DATA = Path("data/eafc25_players.csv")
 if not DATA.exists():
@@ -127,3 +135,30 @@ t["rel_err"] = t["abs_err"] / t["value_eur"] * 100
 for g in ["공격", "미드필더", "수비"]:
     s = t[t["group"] == g]
     print(f"포지션 {g} {len(s)}명: 평균 절대 오차 {man(s['abs_err'].mean())}, 실제 몸값 대비 {s['rel_err'].mean():.1f}%")
+
+print("\n== 8. 후보 모델 비교 (overall + age, 로그 몸값, 같은 분할) ==")
+X = ["overall", "age"]
+candidates = [
+    ("선형 회귀", LinearRegression()),
+    ("k-NN 회귀(k=5)", KNeighborsRegressor(n_neighbors=5)),
+    ("결정 트리 회귀(깊이 4)", DecisionTreeRegressor(max_depth=4, random_state=0)),
+    ("랜덤 포레스트 회귀(300그루)", RandomForestRegressor(n_estimators=300, random_state=0)),
+]
+if XGBRegressor is not None:
+    candidates.append(("XGBoost 회귀(기본값)", XGBRegressor(random_state=0)))
+else:
+    print("xgboost가 설치되어 있지 않아 XGBoost 회귀는 건너뜁니다.")
+base_mae = mean_absolute_error(y, base)
+scores = []
+for name, m in candidates:
+    m.fit(train[X], train["log_value"])
+    p_log = m.predict(test[X])
+    mae = mean_absolute_error(y, 10 ** p_log)
+    scores.append((name, mae))
+    print(f"{name}: MAE {man(mae)}, 로그 척도 R² {r2f(r2_score(test['log_value'], p_log))}, "
+          f"평균 모델보다 MAE {(1 - mae / base_mae) * 100:.0f}% 감소")
+best_name, best_mae = min(scores, key=lambda r: r[1])
+lin_mae = scores[0][1]
+print(f"MAE가 가장 작은 모델: {best_name} ({man(best_mae)})")
+print(f"선형 회귀와의 차이: {man(lin_mae - best_mae)} (선형 회귀 MAE의 {(lin_mae - best_mae) / lin_mae * 100:.0f}%)")
+print(f"참고: 평균 모델과 선형 회귀의 차이 {man(base_mae - lin_mae)}")

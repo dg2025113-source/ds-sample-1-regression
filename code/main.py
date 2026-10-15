@@ -7,9 +7,12 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.tree import DecisionTreeRegressor
 
 st.set_page_config(page_title="FC25 몸값 분석", page_icon="⚽", layout="wide")
 
@@ -58,11 +61,28 @@ def fit_models(df):
     result = test.copy()
     result["pred_a"] = pa
     result["pred_c"] = pc
-    return train, test, table, mc, result
+    # 후보 모델 비교: 최종 입력(overall, age)과 로그 몸값, 같은 분할
+    base_mae = mean_absolute_error(y, base_pred)
+    cand_rows = []
+    for name, m in [
+        ("선형 회귀(최종)", LinearRegression()),
+        ("k-NN 회귀(k=5)", KNeighborsRegressor(n_neighbors=5)),
+        ("결정 트리 회귀(깊이 4)", DecisionTreeRegressor(max_depth=4, random_state=0)),
+        ("랜덤 포레스트 회귀(300그루)", RandomForestRegressor(n_estimators=300, random_state=0)),
+    ]:
+        m.fit(train[["overall", "age"]], train["log_value"])
+        p_log = m.predict(test[["overall", "age"]])
+        mae = mean_absolute_error(y, 10 ** p_log)
+        cand_rows.append((name, man(mae), f"{r2_score(test['log_value'], p_log):.2f}",
+                          f"{(1 - mae / base_mae) * 100:.0f}%", "앱에서 계산"))
+    # XGBoost는 브라우저(stlite)에서 돌릴 수 없어 code/check.py로 계산한 값을 적는다
+    cand_rows.append(("XGBoost 회귀(기본값)", "263만 유로", "0.96", "82%", "로컬에서 계산한 값"))
+    cand = pd.DataFrame(cand_rows, columns=["후보 모델", "MAE", "R²(로그 척도)", "평균 모델보다 줄어든 MAE", "계산한 곳"])
+    return train, test, table, mc, result, cand
 
 
 raw, df = load()
-train, test, table, model_c, result = fit_models(df)
+train, test, table, model_c, result, cand = fit_models(df)
 
 st.title("⚽ 축구 선수의 몸값은 정말 종합 능력치로 설명되는가")
 st.caption("FC25 선수 800명 데이터 · 10101 홍길동 · 10102 김영희 · 10103 이철수 (선생님이 만든 가상 팀의 샘플)")
@@ -117,7 +137,17 @@ with tab3:
     st.caption(f"훈련 데이터 {len(train)}명으로 만들고 시험 데이터 {len(test)}명으로 평가했습니다(8:2 분할).")
 
 with tab4:
-    st.subheader("모델 비교 (시험 데이터)")
+    st.subheader("후보 모델 비교 (시험 데이터)")
+    st.markdown("입력은 종합 능력치와 나이, 예측한 값은 로그 몸값으로 같게 두고 회귀 모델 다섯 개를 비교했습니다. MAE는 유로로 되돌려 계산했습니다.")
+    st.dataframe(cand, hide_index=True, use_container_width=True)
+    st.caption("XGBoost 회귀는 브라우저 앱에서 실행할 수 없어 code/check.py로 로컬에서 계산한 값을 적었습니다.")
+    st.markdown(
+        "**선형 회귀를 고른 이유**: XGBoost와 k-NN이 MAE 40만 유로를 더 줄이지만, 선형 회귀는 "
+        "능력치 1점당 1.20배, 나이 한 살당 0.91배처럼 계수를 읽을 수 있습니다. "
+        "수업에서 배운 방법이고, 평균 모델과의 차이(1,150만 유로)에 비하면 점수 차이가 작습니다."
+    )
+
+    st.subheader("우리 팀이 정한 입력과 예측할 값 (선형 회귀)")
     st.dataframe(table, hide_index=True, use_container_width=True)
     st.caption("R²는 각 모델이 예측한 값의 척도에서 계산했습니다. 서로 다른 척도의 R²는 비교하지 않고, 유로 단위의 MAE로 비교합니다.")
     which = st.radio("산점도로 볼 모델", ["A. overall", "C. overall + age"], horizontal=True)
