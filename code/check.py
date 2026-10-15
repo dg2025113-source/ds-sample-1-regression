@@ -162,3 +162,41 @@ lin_mae = scores[0][1]
 print(f"MAE가 가장 작은 모델: {best_name} ({man(best_mae)})")
 print(f"선형 회귀와의 차이: {man(lin_mae - best_mae)} (선형 회귀 MAE의 {(lin_mae - best_mae) / lin_mae * 100:.0f}%)")
 print(f"참고: 평균 모델과 선형 회귀의 차이 {man(base_mae - lin_mae)}")
+
+print("\n== 9. 인사이트: 우리 팀이 찾아낸 것 ==")
+print("[인사이트 1] 같은 능력치라면 젊을수록 비싸다")
+p22 = 10 ** mc.predict(pd.DataFrame({"overall": [85], "age": [22]}))[0]
+p32 = 10 ** mc.predict(pd.DataFrame({"overall": [85], "age": [32]}))[0]
+print(f"모델 예측 능력치 85: 22살 {man(p22)}, 32살 {man(p32)}, {p22 / p32:.1f}배")
+s85 = df[df["overall"] == 85]
+y85, o85_ = s85[s85["age"] <= 23], s85[s85["age"] >= 30]
+print(f"실제 능력치 85 선수: 23살 이하 {len(y85)}명 중앙값 {man(y85['value_eur'].median())}, "
+      f"30살 이상 {len(o85_)}명 중앙값 {man(o85_['value_eur'].median())}, "
+      f"{y85['value_eur'].median() / o85_['value_eur'].median():.1f}배")
+for nm in ["Nico Williams", "N. Kanté"]:
+    r = s85[s85["name"] == nm].iloc[0]
+    print(f"  사례: {r['name']} (85, {r['age']}살) {man(r['value_eur'])}")
+
+print("[인사이트 2] 능력치 1점의 값은 위로 갈수록 커지고, 88점까지 꺾이지 않는다")
+med = df.groupby("overall")["value_eur"].median()
+cnt = df.groupby("overall").size()
+for o in [80, 85, 88, 90]:
+    print(f"능력치 {o} 선수 {cnt[o]}명 몸값 중앙값: {man(med[o])}")
+step = (med / med.shift(1)).loc[80:88]
+print(f"바로 아래 점수 대비 중앙값 비율(80~88점): 최소 {step.min():.2f}배, 최대 {step.max():.2f}배")
+print(f"능력치 89~91 선수: {cnt.loc[89:91].sum()}명")
+print(f"모델: 능력치 5점 차이 {10 ** (mc.coef_[0] * 5):.1f}배, 80점과 90점 {10 ** (mc.coef_[0] * 10):.1f}배")
+def p26(o):
+    return 10 ** mc.predict(pd.DataFrame({"overall": [o], "age": [26]}))[0]
+print(f"모델(26살 기준) 1점 오를 때 증가액: 80→81점 {man(p26(81) - p26(80))}, 89→90점 {man(p26(90) - p26(89))}")
+
+print("[인사이트 3] 같은 능력치·나이라면 공격수가 수비수보다 비싸다")
+for g in ["공격", "미드필더", "수비"]:
+    s = t[t["group"] == g]
+    above = (s["value_eur"] > s["pred"]).sum()
+    print(f"시험 데이터 {g} {len(s)}명 중 실제 몸값이 예측보다 비싼 선수: {above}명 ({above / len(s) * 100:.1f}%)")
+for a_name, b_name in [("A. Bastoni", "V. Osimhen"), ("T. Hernández", "V. Gyökeres")]:
+    a = df[df["name"] == a_name].iloc[0]
+    b = df[df["name"] == b_name].iloc[0]
+    print(f"  사례: 능력치 {a['overall']}·{a['age']}살 수비수 {a['name']} {man(a['value_eur'])}, "
+          f"능력치 {b['overall']}·{b['age']}살 공격수 {b['name']} {man(b['value_eur'])}")
