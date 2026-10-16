@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>몸값연구소 발표 · 축구 선수의 몸값</title>
-<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -113,171 +112,9 @@
 <body>
 
 <!-- 1 제목 -->
-<section class="slide chapter">
-  <div class="kicker">1 / 17 · 제목</div>
-  <h1>축구 선수의 몸값은<br>정말 종합 능력치로 설명되는가</h1>
-  <p class="sub">몸값연구소 · 20203 김도윤 · 20211 박서연 · 20219 이준호</p>
-  <p class="small">선생님이 만든 가상 팀의 샘플 · 데이터와 수치는 실제 계산값</p>
-</section>
-
-<!-- 2 데이터셋 -->
+<!-- 모델 소개 4장 (연계 수행평가, 3분 발표). 교사 결정 2026-10-16: 프로젝트 1부 12장은 제출물에서 뺌 -->
 <section class="slide">
-  <div class="kicker">2 / 17 · 우리 팀의 데이터셋</div>
-  <h2>우리 팀의 데이터셋</h2>
-  <div class="withimg">
-    <ul class="facts txt">
-      <li>EA SPORTS FC 25 선수 능력치 (2024-25 시즌)</li>
-      <li>modudata 사본, <b>800명 · 14개 열</b></li>
-      <li>사용한 열: overall · age · value_eur</li>
-      <li>상위 선수만, 골키퍼 <b>0명</b></li>
-    </ul>
-    <div class="diagram plot"><div class="chart" id="g2"></div></div>
-  </div>
-</section>
-
-<!-- 3 선택 이유 -->
-<section class="slide">
-  <div class="kicker">3 / 17 · 이 문제를 선택한 이유</div>
-  <h2>이 문제를 선택한 이유</h2>
-  <ul class="facts">
-    <li>셋 다 즐겨 하는 축구 게임</li>
-    <li>능력치 85인 선수 <b>24명</b>: 몸값 <b>1,700만~7,850만 유로</b>, <b>4.6배</b> 차이</li>
-    <li>게임 회사는 능력치만 보고 몸값을 정할까</li>
-    <li>팀원 생각: "능력치로 다 정해진다" · "어린 유망주가 비싸다"</li>
-  </ul>
-</section>
-
-<!-- 4 과정 -->
-<section class="slide">
-  <div class="kicker">4 / 17 · 어떤 과정으로 분석했는지</div>
-  <h2>어떤 과정으로 분석했는지</h2>
-  <div class="steps">
-    <ol>
-      <li><b>수집</b>modudata 사본 CSV · 800행 · 14열</li>
-      <li><b>변수 선택</b>입력 overall · age, 정답 몸값 · 세부 능력치 6개 제외</li>
-      <li><b>전처리</b>몸값 0인 9명 제외 · 로그 변환(왜도 2.80→0.36)</li>
-      <li><b>분할</b>훈련 632명 · 시험 159명 · 난수 고정</li>
-      <li><b>기준선</b>평균 모델 MAE 1,453만 유로</li>
-    </ol>
-    <ol start="6">
-      <li><b>후보 비교</b>회귀 모델 5종, 같은 입력 · 같은 분할</li>
-      <li><b>선택</b>선형 회귀, 계수로 설명 가능</li>
-      <li><b>평가</b>유로 단위 MAE 중심 · R² 함께</li>
-      <li><b>해석</b>나이별 · 점수별 몸값, 포지션별 오차 방향</li>
-      <li><b>한계 점검</b>능력치 77~91 · 골키퍼 0명 · 교차검증 미실시</li>
-    </ol>
-  </div>
-</section>
-
-<!-- 5 고려한 모델 -->
-<section class="slide">
-  <div class="kicker">5 / 17 · 어떤 모델을 고려했는지</div>
-  <h2>어떤 모델을 고려했는지</h2>
-  <table class="mini">
-    <tr><th>후보 모델</th><th>시험 데이터 MAE</th><th>R²(로그 척도)</th></tr>
-    <tr><td>선형 회귀</td><td><em>303만 유로</em></td><td>0.94</td></tr>
-    <tr><td>k-NN 회귀(k=5)</td><td>263만 유로</td><td>0.96</td></tr>
-    <tr><td>결정 트리 회귀(깊이 4)</td><td>621만 유로</td><td>0.82</td></tr>
-    <tr><td>랜덤 포레스트 회귀(300그루)</td><td>271만 유로</td><td>0.96</td></tr>
-    <tr><td>XGBoost 회귀(기본값)</td><td>263만 유로</td><td>0.96</td></tr>
-  </table>
-  <p class="small">입력 overall · age, 예측 로그 몸값, 같은 분할 · 기준선(평균 모델) MAE 1,453만 유로</p>
-</section>
-
-<!-- 6 선택 이유 -->
-<section class="slide">
-  <div class="kicker">6 / 17 · 왜 이 모델을 선택했는지</div>
-  <h2>왜 이 모델을 선택했는지</h2>
-  <ul class="facts">
-    <li>가장 작은 MAE: XGBoost · k-NN <b>263만 유로</b>, 선형 회귀보다 <b>40만</b> 작음</li>
-    <li>그래도 선형 회귀: 계수로 설명, 능력치 1점 <b>1.20배</b> · 나이 1살 <b>0.91배</b></li>
-    <li>질문이 "설명되는가", 이유를 읽을 수 있는 모델</li>
-    <li>수업에서 배운 방법, 팀원 모두 설명 가능</li>
-    <li>점수 차이: 기준선 대비 <b>1,150만</b> 감소, 추가 감소는 <b>40만</b></li>
-  </ul>
-</section>
-
-<!-- 7 평가지표 -->
-<section class="slide">
-  <div class="kicker">7 / 17 · 우리가 사용한 평가지표</div>
-  <h2>우리가 사용한 평가지표</h2>
-  <ul class="facts">
-    <li>R²: 평균 모델보다 오차를 얼마나 줄였나 (0~1)</li>
-    <li>MAE: 예측이 실제 몸값에서 평균 몇 유로 빗나가나</li>
-    <li>우리 모델 C: MAE <b>303만 유로</b>, R² <b>0.94</b>(로그 척도)</li>
-    <li>기준선(평균 모델): MAE <b>1,453만 유로</b>, R² <b>0.00</b></li>
-    <li>모델 비교는 MAE로: 척도가 다른 R²는 비교 불가</li>
-  </ul>
-</section>
-
-<!-- 8 결정 -->
-<section class="slide">
-  <div class="kicker">8 / 17 · 모델링 과정에서 우리 팀이 결정한 것</div>
-  <h2>모델링 과정에서 우리 팀이 결정한 것</h2>
-  <ul class="facts">
-    <li>몸값 0인 선수 9명 제외, 평균으로 채우지 않음</li>
-    <li>훈련 632명 · 시험 159명 분할 고정</li>
-    <li>입력과 예측값: A overall <b>857만</b> → B 로그 몸값 <b>766만</b> → C 나이 추가 <b>303만 유로</b></li>
-    <li>몸값에 로그 변환 (왜도 2.80에서 0.36으로)</li>
-    <li>비교는 유로 단위 MAE로, 포지션은 오차의 방향으로 다시 확인</li>
-  </ul>
-</section>
-
-<!-- 9 해석 -->
-<section class="slide">
-  <div class="kicker">9 / 17 · 최종 분석 결과에 대한 우리 팀의 해석</div>
-  <h2>최종 분석 결과에 대한 우리 팀의 해석</h2>
-  <div class="withimg">
-    <div class="diagram plot"><div class="chart" id="g8"></div></div>
-    <ul class="facts txt small-facts">
-      <li>몸값 = 실력 + 남은 선수 생활<br><span class="sub2">85점 22살 <b>8,351만</b> · 32살 <b>3,393만</b> (2.5배)</span></li>
-      <li>능력치 1점 값은 위로 갈수록 커짐<br><span class="sub2">80→81점 <b>+469만</b> · 89→90점 <b>+2,442만</b></span></li>
-      <li>같은 능력치·나이면 공격수가 더 비쌈<br><span class="sub2">예측보다 비싼 선수: 공격 <b>75.6%</b> · 수비 <b>29.4%</b></span></li>
-    </ul>
-  </div>
-  <p class="small">약점: 오차 상위 10명 중 8명이 23살 이하, 젊은 최상위 선수는 높게 예측</p>
-</section>
-
-<!-- 10 찾아낸 것 -->
-<section class="slide">
-  <div class="kicker">10 / 17 · 우리 팀이 찾아낸 것</div>
-  <h2>우리 팀이 찾아낸 것</h2>
-  <table class="mini cmp">
-    <tr><th>발견</th><th>처음 생각</th><th>데이터가 보여 준 것</th></tr>
-    <tr><td>나이</td><td>능력치로 다 결정</td><td>85점 23살 이하 <em>7,625만</em> · 30살 이상 <em>2,650만</em> (2.9배)</td></tr>
-    <tr><td>최상위</td><td>꼭대기에서 꺾임</td><td>80~88점 한 점당 <em>1.12~1.34배</em>, 꺾임 없음</td></tr>
-    <tr><td>포지션</td><td>차이 불분명</td><td>87점·25살 수비 Bastoni <em>8,850만</em> · 공격 Osimhen <em>1억 150만</em></td></tr>
-  </table>
-  <p class="small">89~91점은 11명뿐이라 판단 보류 · 단위: 유로</p>
-</section>
-
-<!-- 11 추가 연구 -->
-<section class="slide">
-  <div class="kicker">11 / 17 · 이후 추가로 연구한다면</div>
-  <h2>이후 추가로 연구한다면 더 해 보고 싶은 것</h2>
-  <table class="mini">
-    <tr><th>구분</th><th>키워드</th></tr>
-    <tr><td>더 해 볼 분석</td><td>계약 기간과 리그 정보 추가, 능력치 77 미만과 골키퍼 포함</td></tr>
-    <tr><td>교과 연계</td><td>경제: 가격과 수요 · 체육: 선수 생애 주기 · 수학: 로그와 지수</td></tr>
-    <tr><td>진로 분야</td><td>스포츠 데이터 분석가 · 구단 스카우트 · 게임 밸런스 디자이너</td></tr>
-  </table>
-</section>
-
-<!-- 12 느낀 점 -->
-<section class="slide">
-  <div class="kicker">12 / 17 · 느끼고 배운 점</div>
-  <h2>AI를 활용하고 데이터를 분석하며 느끼고 배운 점</h2>
-  <ul class="facts small-facts">
-    <li>김도윤: "AI가 제일 먼저 말한 방법이 우리 데이터에 맞는 방법은 아니었다."</li>
-    <li>박서연: "MAE가 41% 줄었다는 말이 R² 0.67보다 친구들에게 설명하기 쉬웠다."</li>
-    <li>이준호: "결론에 넣지 못하는 결과도 기록할 가치가 있다."</li>
-  </ul>
-  <p class="point">AI 활용에서 배운 것: <b>기준선은 훈련 데이터 평균으로</b> · <b>다른 척도의 R²는 비교 불가</b></p>
-</section>
-
-<!-- 13~16 2부 · 모델 소개 (3분 발표) -->
-<section class="slide">
-  <div class="kicker">13 / 17 · 모델 소개 · 우리가 선택한 모델</div>
+  <div class="kicker">1 / 4 · 모델 소개 · 우리가 선택한 모델</div>
   <h2>우리가 선택한 모델: 선형 회귀</h2>
   <ul class="facts small-facts">
     <li>원리: 오차가 가장 작아지는 직선을 찾음 (우리는 로그 몸값에 적용)</li>
@@ -289,7 +126,7 @@
 </section>
 
 <section class="slide">
-  <div class="kicker">14 / 17 · 모델 소개 · 비교 모델 1</div>
+  <div class="kicker">2 / 4 · 모델 소개 · 비교 모델 1</div>
   <h2>비교 모델 1: XGBoost 회귀</h2>
   <ul class="facts small-facts">
     <li>원리: 작은 트리를 차례로 더함, 다음 트리가 앞 트리의 오차를 줄임</li>
@@ -301,7 +138,7 @@
 </section>
 
 <section class="slide">
-  <div class="kicker">15 / 17 · 모델 소개 · 비교 모델 2</div>
+  <div class="kicker">3 / 4 · 모델 소개 · 비교 모델 2</div>
   <h2>비교 모델 2: k-NN 회귀(k=5)</h2>
   <ul class="facts small-facts">
     <li>원리: 입력이 가장 가까운 선수 5명의 값을 평균</li>
@@ -313,7 +150,7 @@
 </section>
 
 <section class="slide">
-  <div class="kicker">16 / 17 · 모델 소개 · 세 모델 비교 요약</div>
+  <div class="kicker">4 / 4 · 모델 소개 · 세 모델 비교 요약</div>
   <h2>세 모델 비교 요약</h2>
   <table class="mini cmp">
     <tr><th>모델</th><th>원리</th><th>장점</th><th>단점</th><th>적합한 상황</th><th>우리 데이터</th></tr>
@@ -322,14 +159,6 @@
     <tr><td>k-NN</td><td>가까운 5명 평균</td><td>단순, 학습 없음</td><td>척도에 민감</td><td>사례가 많음</td><td>263만 유로</td></tr>
   </table>
   <p class="point">우리 데이터에는 <b>선형 회귀</b>: 질문이 "설명되는가", 40만 유로 차이보다 계수 해석</p>
-</section>
-
-<!-- 17 마무리 -->
-<section class="slide chapter">
-  <div class="kicker">17 / 17 · 마무리</div>
-  <h1>감사합니다</h1>
-  <p class="sub">질문 받겠습니다</p>
-  <p class="small">몸값연구소 · 김도윤 · 박서연 · 이준호</p>
 </section>
 
 <div class="hint">← → 이동 · Home 처음으로</div>

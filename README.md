@@ -152,5 +152,5 @@ README의 수치는 `python3 code/check.py`로 다시 계산할 수 있습니다
 
 ## 배포(선택)
 - 깃허브 페이지스: 저장소의 `index.html`이 브라우저에서 앱을 실행합니다(stlite).
-- 발표 슬라이드: `slides.html`
+- 모델 소개 슬라이드(4장, 연계 수행평가): `slides.html`
 - 포스터(A1 세로): `poster.html` · `poster.pdf`. 그래프와 QR 코드는 `python3 code/poster_figs.py`로 다시 만들 수 있습니다(matplotlib·segno 필요).
