@@ -85,7 +85,7 @@ raw, df = load()
 train, test, table, model_c, result, cand = fit_models(df)
 
 st.title("⚽ 축구 선수의 몸값은 정말 종합 능력치로 설명되는가")
-st.caption("FC25 선수 800명 데이터 · 10101 홍길동 · 10102 김영희 · 10103 이철수 (선생님이 만든 가상 팀의 샘플)")
+st.caption("FC25 선수 800명 데이터 · 20203 김도윤 · 20211 박서연 · 20219 이준호 (선생님이 만든 가상 팀의 샘플)")
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["① 질문", "② 데이터 보기", "③ 기준선", "④ 모델 결과", "⑤ 해석·한계"])
 
