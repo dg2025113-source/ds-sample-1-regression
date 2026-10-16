@@ -1,6 +1,6 @@
-streamlit==1.53.1
-pandas==2.3.3
-numpy==1.26.4
-plotly==6.6.0
-scikit-learn==1.8.0
-xgboost==3.2.0
+streamlit
+pandas
+numpy
+plotly
+scikit-learn
+xgboost
